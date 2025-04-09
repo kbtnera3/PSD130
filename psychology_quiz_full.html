@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ψυχολογικό Κουίζ</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    h1 { color: #444; }
+    .question { margin-bottom: 20px; padding: 10px; background: white; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    .question h3 { margin-top: 0; }
+    .answers label { display: block; margin-bottom: 5px; }
+    #submitBtn { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #results { margin-top: 30px; padding: 15px; background: #e0ffe0; border: 1px solid #b2d8b2; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Κουίζ Ιστορίας & Συστημάτων Ψυχολογίας</h1>
+  <form id="quizForm"></form>
+  <button id="submitBtn">Υποβολή</button>
+  <div id="results"></div>
+
+  <script>
+    const quizData = [
+[
+  { q: "Ο _____ διαμόρφωσε την πρώτη σχολή ψυχολογίας ...", a: ["Thomas Hobbes", "Wilhelm Wundt", ...], correct: 1 },
+  ...
+  { q: "Οι μηχανισμοί άμυνας αποτελούν τρόπο διαχείρισης που πηγάζει από:", a: ["Το Εγώ", "Το Εκείνο", "Το Υπερεγώ", "Το Εγώ και το Υπερεγώ"], correct: 0 }
+]
+];
+    const form = document.getElementById("quizForm");
+    const resultsDiv = document.getElementById("results");
+
+    quizData.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `<h3>Ερώτηση ${index + 1}: ${item.q}</h3>`;
+      const answers = document.createElement("div");
+      answers.classList.add("answers");
+      item.a.forEach((answer, i) => {
+        const id = `q${index}_a${i}`;
+        answers.innerHTML += `
+          <label>
+            <input type="radio" name="q${index}" value="${i}" /> ${answer}
+          </label>
+        `;
+      });
+      div.appendChild(answers);
+      form.appendChild(div);
+    });
+
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      let score = 0;
+      quizData.forEach((item, index) => {
+        const selected = form.querySelector(`input[name='q${index}']:checked`);
+        if (selected && parseInt(selected.value) === item.correct) {
+          score++;
+        }
+      });
+      resultsDiv.innerHTML = `<h2>Το σκορ σου: ${score}/${quizData.length}</h2>`;
+      quizData.forEach((item, index) => {
+        resultsDiv.innerHTML += `<p><strong>Ερώτηση ${index + 1}:</strong> Σωστή απάντηση: <em>${item.a[item.correct]}</em></p>`;
+      });
+    });
+  </script>
+</body>
+</html>
